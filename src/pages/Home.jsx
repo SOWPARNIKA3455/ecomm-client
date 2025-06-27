@@ -1,148 +1,127 @@
-import { Container, Button, Row, Col, Card, Form } from 'react-bootstrap';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaShoppingCart, FaSearch, FaUser } from 'react-icons/fa';
 
-function Home() {
+const AmazonHomePage = () => {
+  const navigate = useNavigate();
+
+
+
+  const categories = [
+    {
+      name: 'Electronics',
+      image: 'https://www.shutterstock.com/image-illustration/3d-variety-home-appliances-concept-600nw-2048419898.jpg',
+    },
+    {
+      name: 'Home Decor',
+      image: 'https://images.ctfassets.net/bjlp9d7o6h1o/7b0YKFSA3pKq9sRBzyBuOe/73f1ee3d0b2e029411f86b2992b9fb1f/Opendoor_2024_Home_Decor_Report_Blog_Header_2.jpg',
+    },
+    {
+      name: 'kids',
+      image: 'https://i.pinimg.com/originals/ea/87/38/ea873836677caa79714a3cbb49f2f018.jpg',
+    },
+    {
+      name: 'Fashion',
+      image: 'https://www.kalkifashion.com/blogs/wp-content/uploads/2023/12/Traditionally_Cool_Men_And_Women_Outfit_Ideas_for_Republic_Day-768x489.jpg',
+    },
+  ];
+
+  const products = [
+    {
+      name: 'Wireless Headphones',
+      price: '$59.99',
+      image: 'https://m.media-amazon.com/images/I/612-xSgZ3vL.jpg',
+    },
+    {
+      name: 'Eco-Friendly Plant Pot',
+      price: '$14.99',
+      image: 'https://images.meesho.com/images/products/546274890/q25ee_1200.jpg',
+    },
+    {
+      name: 'Modern Sofa',
+      price: '$399.00',
+      image: 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQNMxuCN0Imqu3D4ha-yflYHrGSgBwMKvUBQMz4JnTtJrJjZ5AXNzb8u_ibGSUuxrrnaR7zsxW1LOYroVqO81mHswFUqplnpaE9mqYhEjpEqb8S09DOCDEEHg',
+    },
+    {
+      name: 'Smart Watch',
+      price: '$99.99',
+      image: 'https://suprememobiles.in/cdn/shop/files/NoisePulse2ProSmartWatch-Blue.png?v=1732195380',
+    },
+  ];
+
   return (
-    <>
-      {/* Full-Screen Hero Section */}
-      <div 
-        style={{
-          minHeight: '100vh',
-          minWidth:'100wh',
-          background: 'linear-gradient(to right, #ff7e5f, #feb47b)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-          textAlign: 'center',
-          color: 'white',
-          position: 'relative',
-          padding: '0 px',
-        }}
-      >
-        <div 
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            zIndex: 1,
-          }}
-        />
-        <div style={{ zIndex: 2 }}>
-          <h1 style={{ fontSize: '3.5rem', fontWeight: 'bold', textTransform: 'uppercase', textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
-            Discover the Best Products at Unbeatable Prices 🛒
-          </h1>
-          <p style={{ fontSize: '1.5rem', maxWidth: '600px', margin: '20px auto' }}>
-            Step into the world of <strong>EcommSite</strong> — where every product is a new adventure and every deal feels like a win.
-          </p>
-          <Button 
-            variant="light" 
-            size="lg" 
-            style={{
-              fontSize: '1.2rem', 
-              padding: '20px',
-              borderRadius: '30px',
-              backgroundColor: '#ff7e5f',
-              color: '#fff',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#feb47b'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#ff7e5f'}
-            onClick={() => window.location.href = '/products'}
-          >
-            🛍️ Start Shopping
-          </Button>
+    <div className="w-full min-h-screen">
+      {/* Top Banner */}
+      <div className="w-full mb-6 ">
+        <div className="bg-[url('/bg.png')] bg-cover bg-center h-190 flex items-center justify-center rounded-md bg-no-repeat">
+  {/* your content */}
+
+          <div className="text-center text-black bg-opacity-40 rounded">
+            
+            <button
+              onClick={() => window.location.href = '/signup'}
+              className="mt-140 px-6 py-2 bg-green-600 text-white font-medium rounded hover:bg-green-700 transition"
+            >
+              Join Zenvue Now
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Popular Categories */}
-      <div className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
-        <Container className="text-center">
-          <h2 className="mb-4" style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#343a40' }}>
-            Shop By Category
-          </h2>
-          <Row className="g-4">
-            <Col xs={6} md={3}>
-              <Card style={{ backgroundColor: '#ffcccb', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <Card.Body>👕 Fashion Trends</Card.Body>
-              </Card>
-            </Col>
-            <Col xs={6} md={3}>
-              <Card style={{ backgroundColor: '#ffec99', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <Card.Body>📱 Latest Tech</Card.Body>
-              </Card>
-            </Col>
-            <Col xs={6} md={3}>
-              <Card style={{ backgroundColor: '#b3e0ff', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <Card.Body>🏠 Home Essentials</Card.Body>
-              </Card>
-            </Col>
-            <Col xs={6} md={3}>
-              <Card style={{ backgroundColor: '#d3f8e2', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <Card.Body>🎮 Gaming Zone</Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+{/* Small Box Advertisement Cards */}
+<div className=" mb-19">
 
-      {/* Newsletter Section */}
-      <div style={{ minHeight: '100vh', backgroundColor: '#28a745', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 15px' }}>
-        <Container className="text-center">
-          <h3 className="mb-3" style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>
-            Stay Ahead of the Trends 🚀
-          </h3>
-          <p style={{ fontSize: '1.2rem' }}>
-            Be the first to know about exclusive drops, flash sales, and irresistible offers. Sign up now!
-          </p>
-          <Form className="d-flex justify-content-center mt-3">
-            <Form.Control type="email" placeholder="Enter your email" style={{ maxWidth: '300px', padding: '12px' }} />
-            <Button variant="light" style={{ fontSize: '1.2rem', padding: '12px 30px', borderRadius: '30px', marginLeft: '10px' }}>
-              Subscribe
-            </Button>
-          </Form>
-        </Container>
+  <div className="grid grid-cols-2 sm:grid-cols-4 ">
+    {[
+      'https://rukminim2.flixcart.com/fk-p-flap/480/300/image/293b27988e44a530.jpg?q=90',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStpeMejxiSdT-sfdcRvCZKwBJs4qCUWGc5uQ&s',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6Kz2m-pxY_REQ4-AHvy2DR2Ps-bmOvtMsSA&s',
+      'https://img.freepik.com/free-vector/fashion-store-banner-template_1361-1248.jpg?semt=ais_hybrid&w=740',
+    ].map((img, i) => (
+      <div key={i} className=" rounded shadow hover:shadow-md">
+        <img src={img} alt={`Ad ${i}`} className="h-60 w-full object-cover rounded" />
       </div>
+    ))}
+  </div>
+</div>
 
-      {/* Footer Section */}
-      <footer style={{ backgroundColor: '#222', color: 'white', padding: '40px 0 0' }}>
-        <Container>
-          <Row>
-            <Col md={4}>
-              <h5>EcommSite</h5>
-              <p>Making shopping easier, faster, and more delightful — every single day.</p>
-            </Col>
-            <Col md={2}>
-              <h6>Company</h6>
-              <ul className="list-unstyled">
-                <li><a href="#" className="text-light">About Us</a></li>
-                <li><a href="#" className="text-light">Careers</a></li>
-                <li><a href="#" className="text-light">Blog</a></li>
-              </ul>
-            </Col>
-            <Col md={2}>
-              <h6>Support</h6>
-              <ul className="list-unstyled">
-                <li><a href="#" className="text-light">Contact</a></li>
-                <li><a href="#" className="text-light">FAQs</a></li>
-                <li><a href="#" className="text-light">Returns</a></li>
-              </ul>
-            </Col>
-            <Col md={4}>
-              <h6>Follow Us</h6>
-              <div>
-                <a href="#" className="text-light">Facebook</a> | 
-                <a href="#" className="text-light"> Instagram</a> | 
-                <a href="#" className="text-light"> Twitter</a>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-        <div style={{ backgroundColor: '#111', color: '#bbb', textAlign: 'center', padding: '10px 0' }}>
-          © 2025 EcommSite. All rights reserved.
+
+
+      {/* Categories */}
+      <div className="mb-10">
+        <h2 className="text-3xl font-semibold mb-4">Popular Categories</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {categories.map((cat, i) => (
+            <div
+              key={i}
+              onClick={() => navigate(`/products/category/${encodeURIComponent(cat.name)}`)}
+              className=" shadow rounded overflow-hidden cursor-pointer hover:shadow-xl hover:scale-105 transition-transform duration-200"
+            >
+              <img src={cat.image} alt={cat.name} className="h-90 w-full object-cover rounded" />
+              <p className="text-center p-2 font-medium">{cat.name}</p>
+            </div>
+          ))}
         </div>
-      </footer>
-    </>
+      </div>
+
+      {/* Featured Products */}
+      <div className=" pb-10">
+        <h2 className="text-3xl font-semibold mb-4">Featured Products</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {products.map((prod, i) => (
+            <div key={i} className="bg-white shadow rounded p-3">
+              <img src={prod.image} alt={prod.name} className="h-40 w-full object-contain rounded" />
+              <h3 className="text-sm mt-2 font-medium">{prod.name}</h3>
+              <p className="text-orange-600 font-semibold">{prod.price}</p>
+              <button className="mt-2 w-full bg-yellow-400 hover:bg-yellow-500 text-sm py-1 rounded">
+                Add to Cart
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
-}
+};
 
-export default Home;
+export default AmazonHomePage;

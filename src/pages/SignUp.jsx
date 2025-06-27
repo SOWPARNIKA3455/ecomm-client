@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
-import { useAuth } from '../context/AuthContext';
 
-const LoginPage = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+const Signup = () => {
+  const navigate = useNavigate();
+
+  const [role, setRole] = useState('user'); // default role
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
+
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,49 +27,16 @@ const LoginPage = () => {
     setSuccessMsg('');
     setLoading(true);
 
-    const { email, password } = formData;
-
-    const tryLogin = async (endpoint) => {
-      try {
-        const res = await API.post(endpoint, { email, password });
-        return res.data;
-      } catch (err) {
-        return null;
-      }
-    };
-
     try {
-      const endpoints = ['/admin/login', '/seller/login', '/user/login'];
-      let userData = null;
+      const payload = { ...formData, role }; // include role
 
-      for (const endpoint of endpoints) {
-        userData = await tryLogin(endpoint);
-        if (userData) break;
-      }
+      await API.post('/user/signup', payload);
 
-      if (!userData) {
-        setError('Login failed: Invalid credentials or role');
-        return;
-      }
-
-      const  token  = userData.token;
-      const user = userData.user || userData.seller || userData.admin;
-      const userWithToken = { ...user, token };
-
-      login(userWithToken); // Save to context
-      localStorage.setItem('user', JSON.stringify(userWithToken));
-      localStorage.setItem('role', user.role);
-
-      setSuccessMsg('Login successful!');
-      setFormData({ email: '', password: '' });
-
-      setTimeout(() => {
-        if (user.role === 'admin') navigate('/admindashboard');
-        else if (user.role === 'seller') navigate('/sellerdashboard');
-        else navigate('/');
-      }, 1000);
+      setSuccessMsg('Signup successful! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
-      setError('Unexpected login error');
+      const errorMsg = err.response?.data?.error || err.message || 'Signup failed';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -72,46 +44,61 @@ const LoginPage = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Sign in</h2>
+      <h2 style={styles.title}>Create Account</h2>
 
       <form onSubmit={handleSubmit} style={styles.form}>
-        <input
+        <select
+          name="role"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
           style={styles.input}
+        >
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          style={styles.input}
+        />
+        <input
           type="email"
           name="email"
           placeholder="Email Address"
           value={formData.email}
           onChange={handleChange}
           required
-        />
-
-        <input
           style={styles.input}
+        />
+        <input
           type="password"
           name="password"
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
           required
+          style={styles.input}
         />
 
         <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? 'Logging in...' : 'Continue'}
+          {loading ? 'Signing up...' : 'Create Account'}
         </button>
       </form>
 
       {error && <p style={{ ...styles.message, color: 'red' }}>{error}</p>}
       {successMsg && <p style={{ ...styles.message, color: 'green' }}>{successMsg}</p>}
 
-      <div style={styles.divider}>
-        <hr style={styles.line} />
-        <span style={styles.orText}>New to ShopKart?</span>
-        <hr style={styles.line} />
+      <div style={styles.footer}>
+        Already have an account?{' '}
+        <span style={styles.link} onClick={() => navigate('/login')}>
+          Sign in
+        </span>
       </div>
-
-      <button style={styles.signupBtn} onClick={() => navigate('/signup')}>
-        Create your ShopKart account
-      </button>
     </div>
   );
 };
@@ -124,6 +111,7 @@ const styles = {
     borderRadius: '8px',
     backgroundColor: '#f9f9f9',
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   },
   title: {
     textAlign: 'center',
@@ -157,30 +145,16 @@ const styles = {
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  divider: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '1.5rem 0',
-  },
-  line: {
-    flex: 1,
-    height: '1px',
-    backgroundColor: '#ccc',
-  },
-  orText: {
-    margin: '0 1rem',
+  footer: {
+    marginTop: '1.5rem',
+    textAlign: 'center',
     color: '#666',
-    fontSize: '0.9rem',
   },
-  signupBtn: {
-    width: '100%',
-    padding: '0.9rem',
-    backgroundColor: '#f0f0f0',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    fontWeight: '500',
+  link: {
+    color: '#007185',
     cursor: 'pointer',
+    textDecoration: 'underline',
   },
 };
 
-export default LoginPage;
+export default Signup;
