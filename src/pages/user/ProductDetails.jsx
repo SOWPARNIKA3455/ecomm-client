@@ -10,7 +10,8 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { user } = useAuth();
+  const [btnLoading, setBtnLoading] = useState(false);
+  const { user, fetchCartCountFromServer } = useAuth();
   const navigate = useNavigate();
   const [inWishlist, setInWishlist] = useState(false);
 
@@ -33,9 +34,7 @@ const ProductDetails = () => {
         const res = await API.get("/wishlist", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        const isInWishlist = res.data.some(
-          (item) => item._id === productId
-        );
+        const isInWishlist = res.data.some((item) => item._id === productId);
         setInWishlist(isInWishlist);
       } catch (err) {
         console.error("Failed to check wishlist", err);
@@ -52,16 +51,26 @@ const ProductDetails = () => {
       return navigate("/login");
     }
 
+    if (product.stock === 0) {
+      toast.error("Product is out of stock");
+      return;
+    }
+
+    setBtnLoading(true);
     try {
       await API.post(
         "/cart/add",
-        { userId: user._id, productId: product._id, quantity: 1 },
+        { productId: product._id, quantity: 1 },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
+      await fetchCartCountFromServer();
+      window.dispatchEvent(new Event("cartUpdated"));
       toast.success("Added to cart!");
     } catch (err) {
       console.error("Failed to add to cart", err);
       toast.error("Could not add to cart.");
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -178,16 +187,27 @@ const ProductDetails = () => {
           <div className="flex flex-col sm:flex-row gap-4 mt-6">
             <button
               onClick={handleAddToCart}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow"
+              disabled={product.stock === 0 || btnLoading}
+              className={`${
+                product.stock === 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } text-white px-6 py-2 rounded-lg shadow`}
             >
-              Add to Cart
+              {btnLoading
+                ? "Adding..."
+                : product.stock === 0
+                ? "Out of Stock"
+                : "Add to Cart"}
             </button>
+
             <button
               onClick={handleBuyNow}
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow"
             >
               Buy Now
             </button>
+
             <button
               onClick={handleWishlist}
               className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg shadow"

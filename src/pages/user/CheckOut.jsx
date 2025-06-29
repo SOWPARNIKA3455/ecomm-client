@@ -114,11 +114,11 @@ const Checkout = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Checkout</h1>
+      <h1 className="text-2xl font-bold mb-6 ">Checkout</h1>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      <div className="bg-white shadow p-6 rounded-md space-y-4">
+      <div className="border shadow p-6 rounded-md space-y-4">
         <div>
           <label className="block font-medium mb-1">Address</label>
           <input

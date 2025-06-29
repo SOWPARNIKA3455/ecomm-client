@@ -62,7 +62,7 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-8 p-6 border rounded shadow">
+    <div className="max-w-xl mx-auto mt-8 p-6 border rounded shadow bg-white dark:bg-gray-900 dark:border-gray-700 text-black dark:text-white transition-colors duration-300">
       <h2 className="text-xl font-bold mb-4">Add Product</h2>
       {msg && <p className="mb-4 text-center">{msg}</p>}
 
@@ -73,7 +73,7 @@ const AddProduct = () => {
           value={formData.title}
           onChange={handleChange}
           required
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         />
         <textarea
           name="description"
@@ -81,7 +81,7 @@ const AddProduct = () => {
           value={formData.description}
           onChange={handleChange}
           required
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         />
         <input
           type="number"
@@ -90,7 +90,7 @@ const AddProduct = () => {
           value={formData.price}
           onChange={handleChange}
           required
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         />
         <input
           type="number"
@@ -99,7 +99,7 @@ const AddProduct = () => {
           value={formData.stock}
           onChange={handleChange}
           required
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         />
         <input
           name="category"
@@ -107,7 +107,7 @@ const AddProduct = () => {
           value={formData.category}
           onChange={handleChange}
           required
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         />
         <input
           type="file"
@@ -115,12 +115,12 @@ const AddProduct = () => {
           accept="image/*"
           onChange={handleChange}
           required
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         />
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full disabled:opacity-70"
         >
           {loading ? 'Uploading...' : 'Add Product'}
         </button>

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import API from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import { CSVLink } from 'react-csv';
+import ThemeToggle from '../../components/ThemeToggle'; 
+
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -140,25 +142,36 @@ const AdminDashboard = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h2 className="text-4xl font-bold mb-6 text-gray-800">Admin Dashboard</h2>
+
+  {/* Theme Toggle in Top-Right Corner */}
+  <div className="absolute top-4 right-50  mt-2">
+    <ThemeToggle />
+  </div>
+      <h2 className="text-3xl font-bold text-center mb-2  ">
+    Welcome, Admin {user?.name || ''}
+  </h2>
+
+  <p className="text-center mb-10">
+    Here's your dashboard overview.
+  </p>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-10">
         <div className="bg-blue-100 p-4 rounded-xl shadow">
           <p className="text-sm text-gray-600">Total Users</p>
-          <h3 className="text-2xl font-bold">{overview.totalUsers}</h3>
+          <h3 className="text-2xl text-black font-bold">{overview.totalUsers}</h3>
         </div>
         <div className="bg-green-100 p-4 rounded-xl shadow">
           <p className="text-sm text-gray-600">Total Products</p>
-          <h3 className="text-2xl font-bold">{overview.totalProducts}</h3>
+          <h3 className="text-2xl text-black font-bold">{overview.totalProducts}</h3>
         </div>
         <div className="bg-yellow-100 p-4 rounded-xl shadow">
           <p className="text-sm text-gray-600">Total Orders</p>
-          <h3 className="text-2xl font-bold">{overview.totalOrders}</h3>
+          <h3 className="text-2xl text-black font-bold">{overview.totalOrders}</h3>
         </div>
         <div className="bg-red-100 p-4 rounded-xl shadow">
           <p className="text-sm text-gray-600">Total Revenue</p>
-          <h3 className="text-2xl font-bold">₹{overview.revenue}</h3>
+          <h3 className="text-2xl text-black font-bold">₹{overview.revenue}</h3>
         </div>
       </div>
 
@@ -168,13 +181,13 @@ const AdminDashboard = () => {
         <div className="space-x-2">
           <button
             onClick={() => setChartType('daily')}
-            className={`px-4 py-1 rounded ${chartType === 'daily' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+            className={`px-4 py-1 rounded ${chartType === 'daily' ? 'bg-blue-600 text-black' : 'bg-gray-200'}`}
           >
             Daily
           </button>
           <button
             onClick={() => setChartType('monthly')}
-            className={`px-4 py-1 rounded ${chartType === 'monthly' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+            className={`px-4 py-1 rounded ${chartType === 'monthly' ? 'bg-blue-600 text-black' : 'bg-gray-200'}`}
           >
             Monthly
           </button>

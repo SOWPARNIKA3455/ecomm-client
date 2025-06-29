@@ -28,6 +28,7 @@ import SellerDashboard from './pages/seller/SellerDashboard';
 import SellerOrderManage from './pages/seller/SellerOrderManage';
 import ProductSell from './pages/seller/ProductSell';
 import BecomeSeller from './pages/seller/BecomeSeller';
+import SellerLayout from './layout/SellerLayout';
 
 function App() {
   return (
@@ -53,8 +54,8 @@ function App() {
           {/* Seller Protected Routes */}
           <Route element={<ProtectedRoutes sellerOnly={true} />}>
             <Route path="sellerdashboard" element={<SellerDashboard />} />
-            <Route path="sellerdashboard/sell" element={<ProductSell />} />
-            <Route path="sellerdashboard/orders" element={<SellerOrderManage />} />
+            <Route path="sellerdashboard/sell" element={<SellerLayout><ProductSell /></SellerLayout>} />
+            <Route path="sellerdashboard/orders" element={<SellerLayout><SellerOrderManage /></SellerLayout>} />
           </Route>
         </Route>
 

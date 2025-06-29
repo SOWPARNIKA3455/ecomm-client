@@ -91,7 +91,7 @@ const UserManage = () => {
 
       {/* User Table */}
       <table className="w-full border text-sm">
-        <thead>
+        <thead className='text-xl text-black'>
           <tr className="bg-gray-200">
             <th className="p-2 border">Name</th>
             <th className="p-2 border">Email</th>

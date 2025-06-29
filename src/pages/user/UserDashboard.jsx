@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import EditProfileModal from '../../pages/user/EditProfile';
+
 import axios from 'axios';
 import {
   FaUser, FaEnvelope, FaLock, FaSignOutAlt,
@@ -11,6 +13,7 @@ const UserDashboard = () => {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -69,23 +72,29 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 mt-10 bg-white shadow-lg rounded-lg">
+    <div className="max-w-4xl mx-auto p-6 mt-10 border dark:bg-gray-900 shadow-lg rounded-lg ">
       <h2 className="text-2xl font-bold mb-6">Welcome, {user.name || 'User'} 👋</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Profile Info */}
-        <div className="p-4 border rounded shadow-sm bg-gray-50">
+        <div className="p-4 border rounded shadow-sm">
           <h3 className="text-xl font-semibold mb-4">Profile Information</h3>
           <div className="flex items-center gap-4 mb-4">
             <img
-              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || '')}`}
+              src={
+                user.profilePic
+                  ? user.profilePic
+                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || '')}`
+              }
               alt="User Avatar"
-              className="w-12 h-12 rounded-full border"
+              className="w-12 h-12 rounded-full border object-cover"
             />
             <div>
-              <p className="text-gray-800 font-medium">{user.name}</p>
+              <p className="font-medium">{user.name}</p>
               <p className="text-gray-500 text-sm">{user.email}</p>
-              {user.role && <p className="text-gray-400 text-xs capitalize">Role: {user.role}</p>}
+              {user.role && (
+                <p className="text-gray-400 text-xs capitalize">Role: {user.role}</p>
+              )}
             </div>
           </div>
         </div>
@@ -94,12 +103,20 @@ const UserDashboard = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <Card icon={<FaBoxOpen />} label="Orders" onClick={() => navigate('/orders')} />
           <Card icon={<FaHeart />} label="Wishlist" onClick={() => navigate('/user/wishlist')} />
-          <Card icon={<FaMapMarkedAlt />} label="Addresses" onClick={() => navigate('/addresses')} />
-          <Card icon={<FaCreditCard />} label="Payments" onClick={() => navigate('/payment-methods')} />
-          <Card icon={<FaLock />} label="Profile" onClick={() => navigate('/profile/edit')} />
+        
+          <Card icon={<FaUser />} label="Edit Profile" onClick={() => setIsEditModalOpen(true)} />
           <Card icon={<FaSignOutAlt />} label="Logout" onClick={handleLogout} />
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      {isEditModalOpen && (
+        <EditProfileModal
+          user={user}
+          setUser={setUser}
+          onClose={() => setIsEditModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
@@ -107,10 +124,10 @@ const UserDashboard = () => {
 const Card = ({ icon, label, onClick }) => (
   <button
     onClick={onClick}
-    className="flex flex-col items-center justify-center p-4 border rounded hover:shadow-md hover:bg-gray-50 transition"
+    className="flex flex-col items-center justify-center p-4 border rounded   transition"
   >
     <div className="text-xl text-blue-600 mb-2">{icon}</div>
-    <span className="text-sm font-medium text-gray-800">{label}</span>
+    <span className="text-sm font-medium">{label}</span>
   </button>
 );
 

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback,useEffect } from 'react';
 import API from '../api/axios';
 
 const AuthContext = createContext();
@@ -7,24 +7,30 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
 
-  
-  const getCartQuantity = () => {
-    try {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      return cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-    } catch (err) {
-      return 0;
-    }
-  };
+ const fetchCartCountFromServer = useCallback(async () => {
+  if (!user?.token) return;
+  try {
+    const res = await API.get('/cart', {
+      headers: { Authorization: `Bearer ${user.token}` },
+    });
+    const total = res.data.totalQuantity ?? 0;
+    setCartCount(total);
+  } catch (err) {
+    console.error('❌ Failed to fetch cart count:', err.response?.data || err.message);
+  }
+}, [user]);
 
+
+
+  // Run once on mount: restore user and fetch cart count
   useEffect(() => {
-  
     try {
       const savedUser = localStorage.getItem('user');
       if (savedUser) {
         const parsedUser = JSON.parse(savedUser);
         if (parsedUser && typeof parsedUser === 'object') {
           setUser(parsedUser);
+          fetchCartCountFromServer();
         } else {
           localStorage.removeItem('user');
         }
@@ -34,43 +40,49 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('user');
     }
 
-    
-    setCartCount(getCartQuantity());
-
-  
-    const updateCart = () => {
-      setCartCount(getCartQuantity());
-    };
-
-    
-    window.addEventListener('cartUpdated', updateCart);
+    // Sync cart updates
+    window.addEventListener('cartUpdated', fetchCartCountFromServer);
     return () => {
-      window.removeEventListener('cartUpdated', updateCart);
+      window.removeEventListener('cartUpdated', fetchCartCountFromServer);
     };
   }, []);
 
+  // Handle login
   const login = (userData) => {
-     const finalUser = { ...userData, role: userData.role || 'user' };
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    setCartCount(getCartQuantity());
+    const finalUser = { ...userData, role: userData.role || 'user' };
+    localStorage.setItem('user', JSON.stringify(finalUser));
+    setUser(finalUser);
+    fetchCartCountFromServer();
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
+  // Handle logout
   const logout = async () => {
     try {
-      await API.post('/logout'); 
+      await API.post('/logout');
     } catch (err) {
       console.error('Logout failed:', err);
     } finally {
       localStorage.removeItem('user');
-      localStorage.removeItem('cart');
       setUser(null);
       setCartCount(0);
+      window.dispatchEvent(new Event('cartUpdated'));
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, setUser, cartCount, setCartCount }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        setUser,
+        cartCount,
+        setCartCount,
+     
+        fetchCartCountFromServer,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

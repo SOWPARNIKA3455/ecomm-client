@@ -12,15 +12,21 @@ const AdminLayout = ({ children }) => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      {/* Sidebar */}
-      <aside style={{
-        width: '220px',
-        background: '#222',
-        color: 'white',
-        padding: '1rem',
-        minHeight: '100vh'
-      }}>
+    <div>
+      {/* Sidebar - Fixed */}
+      <aside
+        style={{
+          width: '220px',
+          background: '#222',
+          color: 'white',
+          padding: '1rem',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          height: '100vh',
+          overflowY: 'auto',
+        }}
+      >
         <h2 style={{ marginBottom: '1.5rem' }}>Admin Panel</h2>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           <li style={{ margin: '1rem 0' }}>
@@ -53,8 +59,16 @@ const AdminLayout = ({ children }) => {
         </ul>
       </aside>
 
-      {/* Main Content */}
-      <main style={{ flexGrow: 1, padding: '2rem', background: '#f9f9f9' }}>
+      {/* Main Content Area - Scrollable */}
+      <main
+        style={{
+          marginLeft: '220px',
+          padding: '2rem',
+         
+          minHeight: '100vh',
+          overflowY: 'auto',
+        }}
+      >
         {children}
       </main>
     </div>
@@ -64,7 +78,7 @@ const AdminLayout = ({ children }) => {
 const linkStyle = {
   color: '#fff',
   textDecoration: 'none',
-  fontSize: '1rem'
+  fontSize: '1rem',
 };
 
 export default AdminLayout;

@@ -95,8 +95,8 @@ const ProductManage = () => {
 
       {/* Product Table */}
       <div className="overflow-x-auto">
-        <table className="w-full table-auto border border-gray-300">
-          <thead className="bg-gray-100">
+        <table className="w-full table-auto border  border-gray-300">
+          <thead className="bg-gray-100 text-black">
             <tr>
               <th className="p-2 border">Image</th>
               <th className="p-2 border">Title</th>

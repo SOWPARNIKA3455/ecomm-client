@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import API from '../../api/axios';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaStar } from 'react-icons/fa';
 
 const ProductList = () => {
-  const { user, setCartCount } = useAuth();
+  const { user, fetchCartCountFromServer } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const { category: categoryParam } = useParams();
@@ -25,13 +25,20 @@ const ProductList = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await API.get('/products');
-        let data = res.data;
+        let data;
 
-        if (category && category !== 'all') {
-          data = data.filter(
-            (p) => p.category?.toLowerCase() === category.toLowerCase()
-          );
+        if (category?.toLowerCase() === 'bestseller') {
+          const res = await API.get('/products/bestsellers');
+          data = res.data;
+        } else {
+          const res = await API.get('/products');
+          data = res.data;
+
+          if (category && category !== 'all') {
+            data = data.filter(
+              (p) => p.category?.toLowerCase() === category.toLowerCase()
+            );
+          }
         }
 
         if (search) {
@@ -70,38 +77,34 @@ const ProductList = () => {
     fetchWishlist();
   }, [category, search, user]);
 
-  const handleAdd = async (product) => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
 
-    setBtnLoading((prev) => ({ ...prev, [product._id]: true }));
+const handleAdd = async (product) => {
+  if (!user) return navigate('/login');
 
-    try {
-      const res = await API.post(
-        '/cart/add',
-        { productId: product._id, quantity: 1 },
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      );
+  setBtnLoading((prev) => ({ ...prev, [product._id]: true }));
 
-      const updatedCart = res.data.cart || [];
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
+  try {
+    const res = await API.post(
+      '/cart/add',
+      { productId: product._id, quantity: 1 },
+      { headers: { Authorization: `Bearer ${user.token}` } }
+    );
 
-      const totalQty = updatedCart.reduce(
-        (sum, item) => sum + (item.quantity || 0),
-        0
-      );
-      setCartCount(totalQty);
+    // 🔁 Fetch the actual cart count from server
+    await fetchCartCountFromServer();
 
-      alert('Product added to cart!');
-    } catch (err) {
-      console.error('Add to cart error:', err);
-      alert('Failed to add product to cart.');
-    } finally {
-      setBtnLoading((prev) => ({ ...prev, [product._id]: false }));
-    }
-  };
+    alert('Product added to cart!');
+  } catch (err) {
+    console.error('Add to cart error:', err);
+    alert('Failed to add product to cart.');
+  } finally {
+    setBtnLoading((prev) => ({ ...prev, [product._id]: false }));
+  }
+};
+
+
+
+
 
   const handleWishlistToggle = async (productId) => {
     if (!user) return navigate('/login');
@@ -134,9 +137,9 @@ const ProductList = () => {
 
   return (
     <div className="p-5">
-      <h2 className="text-2xl font-semibold mb-5 text-gray-900 dark:text-white">
-        Products
-        {category ? ` — ${category.charAt(0).toUpperCase() + category.slice(1)}` : ''}
+      <h2 className="text-2xl font-semibold mb-9 text-black-900 dark:text-white text-center">
+        {category === 'bestseller' ? '🔥 Bestsellers' : 'Products'}
+        {category && category !== 'bestseller' ? ` — ${category}` : ''}
         {search && !category ? ` — Search: “${search}”` : ''}
       </h2>
 
@@ -160,14 +163,25 @@ const ProductList = () => {
                   handleWishlistToggle(product._id);
                 }}
                 className="absolute top-2 right-2 text-red-500 text-xl z-10 cursor-pointer"
-                title={
-                  wishlist.includes(product._id)
-                    ? 'Remove from Wishlist'
-                    : 'Add to Wishlist'
-                }
+                title={wishlist.includes(product._id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
               >
                 {wishlist.includes(product._id) ? <FaHeart /> : <FaRegHeart />}
               </div>
+
+              {/* Bestseller Badge */}
+              {category === 'bestseller' && (
+                <div className="absolute top-2 left-2 bg-yellow-400 text-xs px-2 py-1 rounded font-semibold text-black flex items-center gap-1">
+                  <FaStar className="text-sm" />
+                  Bestseller
+                </div>
+              )}
+
+              {/* Out of Stock Badge */}
+              {product.stock === 0 && (
+                <div className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded font-semibold">
+                  Out of Stock
+                </div>
+              )}
 
               <img
                 src={product.imageUrl}
@@ -184,6 +198,8 @@ const ProductList = () => {
                 <p className="font-bold text-lg text-gray-800 dark:text-gray-200">
                   ₹{product.price}
                 </p>
+                {/* Optional: show remaining stock */}
+                {/* <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Stock: {product.stock}</p> */}
               </div>
 
               <div className="p-4 pt-0">
@@ -193,16 +209,20 @@ const ProductList = () => {
                     e.stopPropagation();
                     handleAdd(product);
                   }}
-                  disabled={!user || btnLoading[product._id]}
+                  disabled={!user || btnLoading[product._id] || product.stock === 0}
                   className={`w-full py-2 rounded-lg transition ${
-                    !user
+                    product.stock === 0
+                      ? 'bg-gray-400 cursor-not-allowed text-gray-700 dark:text-gray-300'
+                      : !user
                       ? 'bg-gray-400 cursor-not-allowed text-gray-700 dark:text-gray-300'
                       : btnLoading[product._id]
                       ? 'bg-blue-300 cursor-wait text-white'
                       : 'bg-blue-600 hover:bg-blue-700 text-white'
                   }`}
                 >
-                  {!user
+                  {product.stock === 0
+                    ? 'Out of Stock'
+                    : !user
                     ? 'Login to Add'
                     : btnLoading[product._id]
                     ? 'Adding...'

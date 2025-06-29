@@ -2,17 +2,19 @@ import React, { useEffect, useState } from 'react';
 import API from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
+import ReviewModal from '../../pages/user/ReviewModal';
 
 const OrderHistory = () => {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   const fetchOrders = async () => {
     try {
       const res = await API.get(`/orders/user/${user._id}`);
-      
       const uniqueOrders = Array.from(
         new Map(res.data.orders.map((order) => [order._id, order])).values()
       );
@@ -89,6 +91,19 @@ const OrderHistory = () => {
                     <p className="font-medium">{product?.title || 'Unnamed Product'}</p>
                     <p>Qty: {quantity}</p>
                     <p>Price: ₹{product?.price} × {quantity} = ₹{product?.price * quantity}</p>
+                    {order.isDelivered ? (
+                      <button
+                        onClick={() => {
+                          setSelectedProduct(product);
+                          setShowReviewModal(true);
+                        }}
+                        className="mt-1 px-2 py-1 text-sm bg-indigo-600 text-white rounded"
+                      >
+                        Add Review
+                      </button>
+                    ) : (
+                      <p className="text-sm text-gray-500 mt-1">Not yet delivered</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -106,7 +121,6 @@ const OrderHistory = () => {
         );
       })}
 
-      {/* 📦 Track Order Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded shadow-lg w-full max-w-xl relative">
@@ -161,6 +175,16 @@ const OrderHistory = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {showReviewModal && selectedProduct && (
+        <ReviewModal
+          product={selectedProduct}
+          onClose={() => {
+            setSelectedProduct(null);
+            setShowReviewModal(false);
+          }}
+        />
       )}
     </div>
   );

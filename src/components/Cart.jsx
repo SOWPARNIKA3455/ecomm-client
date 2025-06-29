@@ -18,11 +18,10 @@ const Cart = () => {
       currency: 'INR',
     }).format(amount);
 
-  
   const updateCartState = (updatedCart) => {
     setCartItems(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event('cartUpdated'));
+    window.dispatchEvent(new Event('cartUpdated')); // ✅ Sync Navbar
   };
 
   useEffect(() => {
@@ -99,7 +98,7 @@ const Cart = () => {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Your Shopping Cart</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Your Shopping Cart</h1>
       {globalError && <p className="text-red-600 mb-4 text-center">{globalError}</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -107,7 +106,7 @@ const Cart = () => {
           {cartItems.map(({ product, quantity }) => (
             <div
               key={product._id}
-              className="flex flex-col sm:flex-row items-center bg-white border shadow rounded-lg p-4"
+              className="flex flex-col sm:flex-row items-center border shadow rounded-lg p-4"
             >
               <img
                 src={product.imageUrl || '/placeholder.jpg'}
@@ -115,10 +114,10 @@ const Cart = () => {
                 className="w-24 h-24 object-cover rounded mb-4 sm:mb-0 sm:mr-6"
               />
               <div className="flex-1 w-full">
-                <h2 className="text-lg font-semibold text-gray-800">{product.title}</h2>
-                <p className="text-sm text-gray-600 mt-1">{formatCurrency(product.price)}</p>
+                <h2 className="text-lg font-semibold">{product.title}</h2>
+                <p className="text-sm mt-1">{formatCurrency(product.price)}</p>
 
-                <div className="flex items-center mt-3 space-x-2">
+                <div className="flex items-center text-black mt-3 space-x-2">
                   <button
                     onClick={() => updateQty(product._id, quantity, quantity - 1)}
                     disabled={!!btnState[product._id]}
@@ -126,7 +125,7 @@ const Cart = () => {
                   >
                     −
                   </button>
-                  <span className="px-3 font-medium">{quantity}</span>
+                  <span className="px-3 text-green-700 font-medium">{quantity}</span>
                   <button
                     onClick={() => updateQty(product._id, quantity, quantity + 1)}
                     disabled={!!btnState[product._id]}
@@ -153,13 +152,13 @@ const Cart = () => {
           ))}
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg sticky top-20 h-fit">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Order Summary</h2>
-          <div className="flex justify-between mb-2 text-gray-700">
+        <div className="border p-6 rounded-lg shadow-lg sticky top-20 h-fit">
+          <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+          <div className="flex justify-between mb-2">
             <span>Items:</span>
             <span>{cartItems.length}</span>
           </div>
-          <div className="flex justify-between font-bold text-lg border-t pt-3 text-gray-800">
+          <div className="flex justify-between font-bold text-lg border-t pt-3">
             <span>Total:</span>
             <span>{formatCurrency(totalAmount)}</span>
           </div>

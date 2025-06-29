@@ -36,16 +36,16 @@ const OrderManage = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">🧾 Manage Orders</h2>
+      <h2 className="text-3xl font-bold mb-6 ">🧾 Manage Orders</h2>
 
       {loading ? (
         <p className="text-lg text-gray-600">Loading orders...</p>
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-xl shadow">
+        <div className="overflow-x-auto border rounded-xl shadow">
           <table className="min-w-full text-sm text-left">
-            <thead className="bg-gray-100">
+            <thead className="bg-gray-100 text-black">
               <tr>
                 <th className="p-3">Order ID</th>
                 <th className="p-3">User</th>

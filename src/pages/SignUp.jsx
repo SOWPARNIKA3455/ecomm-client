@@ -127,6 +127,7 @@ const styles = {
     padding: '0.8rem',
     marginBottom: '1rem',
     fontSize: '1rem',
+    color : 'blue',
     borderRadius: '5px',
     border: '1px solid #ccc',
   },

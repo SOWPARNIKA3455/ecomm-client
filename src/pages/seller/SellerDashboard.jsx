@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SellerLayout from '../../layout/SellerLayout';
 import API from '../../api/axios';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   LineElement,
@@ -19,7 +19,6 @@ const SellerDashboard = () => {
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
   const [revenueChartData, setRevenueChartData] = useState({});
 
   useEffect(() => {
@@ -85,17 +84,18 @@ const SellerDashboard = () => {
 
   return (
     <SellerLayout>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Seller Dashboard</h1>
+      <div className="min-h-screen  p-6">
+
+        <h1 className="text-2xl  font-bold mb-4">Seller Dashboard</h1>
 
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
-          <p className="text-red-500">{error}</p>
+          <p className="text-red-500 dark:text-red-400">{error}</p>
         ) : (
           <>
             {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 text-black sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <StatCard title="Total Products" value={products.length} />
               <StatCard title="Pending Orders" value={stats.pendingOrders || 0} />
               <StatCard title="Completed Orders" value={stats.completedOrders || 0} />
@@ -106,36 +106,36 @@ const SellerDashboard = () => {
             </div>
 
             {/* Revenue Chart */}
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-200 mb-6">
-              <h2 className="text-lg font-semibold mb-4">Revenue Overview</h2>
+            <div className=" dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-200 dark:border-gray-700 mb-6">
+              <h2 className="text-lg  font-semibold mb-4 dark:text-white">Revenue Overview</h2>
               {revenueChartData?.labels?.length ? (
-                <Line data={revenueChartData} options={revenueChartOptions} />
+                <Bar data={revenueChartData} options={revenueChartOptions} />
               ) : (
-                <p className="text-gray-500">No revenue data available.</p>
+                <p className="text-gray-500 dark:text-gray-400">No revenue data available.</p>
               )}
             </div>
 
             {/* Product List */}
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-200 mb-6">
-              <h2 className="text-lg font-semibold mb-4">My Products</h2>
+            <div className=" dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-200 dark:border-gray-700 mb-6">
+              <h2 className="text-lg font-semibold mb-4 ">My Products</h2>
               {products.length === 0 ? (
-                <p>You haven't added any products yet.</p>
+                <p className="dark:text-gray-300">You haven't added any products yet.</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                   {products.map(product => (
                     <div
                       key={product._id}
-                      className="border rounded-lg p-4 bg-gray-50 hover:shadow-md transition"
+                      className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 hover:shadow-md transition"
                     >
                       <img
                         src={product.imageUrl || '/placeholder.png'}
                         alt={product.title}
                         className="w-full h-60 object-contain rounded mb-3"
                       />
-                      <h3 className="text-lg font-bold text-gray-800">{product.title}</h3>
+                      <h3 className="text-lg font-bold text-gray-800 dark:text-white">{product.title}</h3>
                       <p className="text-green-600 font-semibold">₹{product.price}</p>
-                      <p className="text-sm text-gray-500">Stock: {product.stock}</p>
-                      <p className="text-sm text-gray-500 mt-1">{product.category}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-300">Stock: {product.stock}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-300 mt-1">{product.category}</p>
                     </div>
                   ))}
                 </div>
@@ -149,9 +149,10 @@ const SellerDashboard = () => {
 };
 
 const StatCard = ({ title, value }) => (
-  <div className="bg-white rounded-lg shadow p-4 text-center border">
-    <p className="text-gray-600">{title}</p>
-    <p className="text-xl font-semibold">{value}</p>
+  <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center border dark:border-gray-600">
+    <p className="text-sm text-gray-600 dark:text-gray-300">{title}</p>
+
+    <p className="text-xl font-semibold dark:text-white">{value}</p>
   </div>
 );
 
