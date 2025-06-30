@@ -31,7 +31,25 @@ const Signup = () => {
       const payload = { ...formData}; // include role
 
       const endpoint = role === 'admin' ? '/admin/signup' : '/user/signup';
-await API.post(endpoint, payload);
+
+if (role === 'admin') {
+      const loginRes = await API.post('/admin/login', {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      const adminToken = loginRes?.data?.token;
+
+      await API.post('/admin/signup', payload, {
+        headers: {
+          Authorization: adminToken ? `Bearer ${adminToken}` : undefined,
+        },
+      });
+    } else {
+      await API.post('/user/signup', payload);
+    }
+
+
 
       setSuccessMsg('Signup successful! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);

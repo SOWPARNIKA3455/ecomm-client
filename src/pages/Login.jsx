@@ -47,7 +47,7 @@ const LoginPage = () => {
         return;
       }
 
-      const  token  = userData.token;
+     
       const user = userData.user || userData.seller || userData.admin;
       const userWithToken = { ...user, token };
 
