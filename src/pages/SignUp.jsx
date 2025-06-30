@@ -27,20 +27,38 @@ const Signup = () => {
     setSuccessMsg('');
     setLoading(true);
 
-    try {
-      const payload = { ...formData, }; // include role
-const endpoint = role === 'admin' ? '/admin/signup' : '/user/signup';
-      await API.post(endpoint, payload);
+     try {
+    const payload = { ...formData };
+    const endpoint = role === 'admin' ? '/admin/signup' : '/user/signup';
 
-      setSuccessMsg('Signup successful! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 1500);
-    } catch (err) {
-      const errorMsg = err.response?.data?.error || err.message || 'Signup failed';
-      setError(errorMsg);
-    } finally {
-      setLoading(false);
+    const { data } = await API.post(endpoint, payload);
+
+    // ✅ Save admin or user info and token in localStorage
+    if (role === 'admin') {
+      localStorage.setItem("admin", JSON.stringify({
+        ...data.admin,
+        token: data.token, // make sure backend sends token in JSON
+      }));
+    } else {
+      localStorage.setItem("user", JSON.stringify({
+        ...data.user,
+        token: data.token,
+      }));
     }
-  };
+
+    setSuccessMsg('Signup successful! Redirecting to login...');
+    setTimeout(() => navigate('/login'), 1500);
+
+  } catch (err) {
+    const errorMsg = err.response?.data?.error || err.message || 'Signup failed';
+    setError(errorMsg);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+    
 
   return (
     <div style={styles.container}>
