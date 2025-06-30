@@ -26,7 +26,7 @@ const EditProfileModal = ({ user, setUser, onClose }) => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await axios.post('http://localhost:3001/api/user/upload', formData, {
+      const res = await axios.post('https://mern-backend-98xl.onrender.com/api/user/upload', formData, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
