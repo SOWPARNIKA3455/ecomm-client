@@ -43,27 +43,26 @@ const LoginPage = () => {
       }
 console.log("userData:", userData); // ✅ ADD THIS
 
-      
-const roleKey = userData.admin ? 'admin' : userData.seller ? 'seller' : 'user';
-const user = userData[roleKey];
-const token = userData.token;
+    const user = userData.user || userData.seller || userData.admin;
 
-if (!user || !token) {
-  setError('Invalid login response: missing token or user');
+if (!user) {
+  setError('Invalid login response: missing user object');
   return;
 }
 
+const roleKey = user.role || 'user';
+const userWithToken = { ...user }; // No token included, we use cookie
 
+login(userWithToken); // Save to context
 
-      const userWithToken = { ...user, token };
-
-      login(userWithToken); // Save to context
-     
-if (roleKey === 'admin') {
+if (user.role === 'admin') {
   localStorage.setItem('admin', JSON.stringify(userWithToken));
 } else {
   localStorage.setItem('user', JSON.stringify(userWithToken));
 }
+localStorage.setItem('role', user.role);
+
+
 
 
       setSuccessMsg('Login successful!');
