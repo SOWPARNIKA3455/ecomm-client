@@ -48,7 +48,7 @@ const LoginPage = () => {
       }
 
      const token = userData.token;
-     
+     const user = userData.user || userData.seller || userData.admin;
 if (!user || !token) {
   setError('Invalid login response: missing token or user');
   return;
