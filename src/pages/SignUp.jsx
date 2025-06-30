@@ -28,9 +28,9 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const payload = { ...formData, role }; // include role
-
-      await API.post('/user/signup', payload);
+      const payload = { ...formData, }; // include role
+const endpoint = role === 'admin' ? '/admin/signup' : '/user/signup';
+      await API.post(endpoint, payload);
 
       setSuccessMsg('Signup successful! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);
