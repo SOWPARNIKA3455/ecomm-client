@@ -32,19 +32,10 @@ const Signup = () => {
 
       const endpoint = role === 'admin' ? '/admin/signup' : '/user/signup';
 
-if (role === 'admin') {
-      const loginRes = await API.post('/admin/login', {
-        email: formData.email,
-        password: formData.password,
-      });
 
-      const adminToken = loginRes?.data?.token;
-
-      await API.post('/admin/signup', payload, {
-        headers: {
-          Authorization: adminToken ? `Bearer ${adminToken}` : undefined,
-        },
-      });
+      if (role === 'admin') {
+      // ✅ DIRECT ADMIN SIGNUP — No login, no token needed
+      await API.post('/admin/signup', payload);
     } else {
       await API.post('/user/signup', payload);
     }
