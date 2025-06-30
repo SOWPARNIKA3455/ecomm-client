@@ -51,9 +51,14 @@ const LoginPage = () => {
       const user = userData.user || userData.seller || userData.admin;
       const userWithToken = { ...user, token };
 
-      login(userWithToken); // Save to context
-      localStorage.setItem('user', JSON.stringify(userWithToken));
-      localStorage.setItem('role', user.role);
+      if (user.role === 'admin') {
+  localStorage.setItem('admin', JSON.stringify(userWithToken));
+} else {
+  localStorage.setItem('user', JSON.stringify(userWithToken));
+}
+
+localStorage.setItem('role', user.role);
+login(userWithToken);
 
       setSuccessMsg('Login successful!');
       setFormData({ email: '', password: '' });
