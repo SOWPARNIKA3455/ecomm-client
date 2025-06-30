@@ -28,19 +28,9 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const payload = { ...formData}; // include role
+      const payload = { ...formData, role }; // include role
 
-      const endpoint = role === 'admin' ? '/admin/signup' : '/user/signup';
-
-
-      if (role === 'admin') {
-      // ✅ DIRECT ADMIN SIGNUP — No login, no token needed
-      await API.post('/admin/signup', payload);
-    } else {
       await API.post('/user/signup', payload);
-    }
-
-
 
       setSuccessMsg('Signup successful! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);

@@ -41,29 +41,19 @@ const LoginPage = () => {
         userData = await tryLogin(endpoint);
         if (userData) break;
       }
-console.log("userData:", userData); // ✅ ADD THIS
 
-    const user = userData.user || userData.seller || userData.admin;
+      if (!userData) {
+        setError('Login failed: Invalid credentials or role');
+        return;
+      }
 
-if (!user) {
-  setError('Invalid login response: missing user object');
-  return;
-}
+      const  token  = userData.token;
+      const user = userData.user || userData.seller || userData.admin;
+      const userWithToken = { ...user, token };
 
-const roleKey = user.role || 'user';
-const userWithToken = { ...user }; // No token included, we use cookie
-
-login(userWithToken); // Save to context
-
-if (user.role === 'admin') {
-  localStorage.setItem('admin', JSON.stringify(userWithToken));
-} else {
-  localStorage.setItem('user', JSON.stringify(userWithToken));
-}
-localStorage.setItem('role', user.role);
-
-
-
+      login(userWithToken); // Save to context
+      localStorage.setItem('user', JSON.stringify(userWithToken));
+      localStorage.setItem('role', user.role);
 
       setSuccessMsg('Login successful!');
       setFormData({ email: '', password: '' });
