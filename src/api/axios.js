@@ -1,3 +1,4 @@
+// src/api/axios.js
 import axios from "axios";
 
 const API = axios.create({
@@ -5,13 +6,15 @@ const API = axios.create({
   withCredentials: true,
 });
 
-
 API.interceptors.request.use((config) => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const admin = JSON.parse(localStorage.getItem("admin"));
   const isAdminRoute = config.url?.includes('/admin');
 
-  
-  if (user?.token && !isAdminRoute) {
+  // ✅ Send correct token depending on route
+  if (isAdminRoute && admin?.token) {
+    config.headers.Authorization = `Bearer ${admin.token}`;
+  } else if (!isAdminRoute && user?.token) {
     config.headers.Authorization = `Bearer ${user.token}`;
   }
 
