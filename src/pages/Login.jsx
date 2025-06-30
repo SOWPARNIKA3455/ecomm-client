@@ -41,29 +41,30 @@ const LoginPage = () => {
         userData = await tryLogin(endpoint);
         if (userData) break;
       }
+console.log("userData:", userData); // ✅ ADD THIS
 
-      if (!userData) {
-        setError('Login failed: Invalid credentials or role');
-        return;
-      }
+      
+const roleKey = userData.admin ? 'admin' : userData.seller ? 'seller' : 'user';
+const user = userData[roleKey];
+const token = userData.token;
 
-     const token = userData.token;
-     const user = userData.user || userData.seller || userData.admin;
 if (!user || !token) {
   setError('Invalid login response: missing token or user');
   return;
 }
 
 
+
       const userWithToken = { ...user, token };
 
       login(userWithToken); // Save to context
-      if (user.role === 'admin') {
+     
+if (roleKey === 'admin') {
   localStorage.setItem('admin', JSON.stringify(userWithToken));
 } else {
   localStorage.setItem('user', JSON.stringify(userWithToken));
 }
-localStorage.setItem('role', user.role);
+
 
       setSuccessMsg('Login successful!');
       setFormData({ email: '', password: '' });
