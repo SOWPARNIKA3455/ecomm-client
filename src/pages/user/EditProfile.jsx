@@ -61,7 +61,7 @@ const EditProfileModal = ({ user, setUser, onClose }) => {
       };
 
       const res = await axios.patch(
-        'http://localhost:3001/api/user/update',
+        'https://mern-backend-98xl.onrender.com/api/user/update',
         updateData,
         { withCredentials: true }
       );
