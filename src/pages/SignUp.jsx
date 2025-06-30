@@ -5,7 +5,10 @@ import API from '../api/axios';
 const Signup = () => {
   const navigate = useNavigate();
 
-  const [role, setRole] = useState('user'); // default role
+  // Only show "Admin" option if developer sets env var
+  const enableAdminOption = import.meta.env.VITE_ENABLE_ADMIN_ROLE === 'true';
+
+  const [role, setRole] = useState('user');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,7 +31,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const payload = { ...formData, role }; // include role
+      const payload = { ...formData, role };
 
       await API.post('/user/signup', payload);
 
@@ -54,7 +57,7 @@ const Signup = () => {
           style={styles.input}
         >
           <option value="user">User</option>
-          <option value="admin">Admin</option>
+          {enableAdminOption && <option value="admin">Admin</option>}
         </select>
 
         <input
@@ -127,7 +130,7 @@ const styles = {
     padding: '0.8rem',
     marginBottom: '1rem',
     fontSize: '1rem',
-    color : 'blue',
+    color: 'blue',
     borderRadius: '5px',
     border: '1px solid #ccc',
   },
