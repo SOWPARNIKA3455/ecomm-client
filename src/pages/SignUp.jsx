@@ -12,13 +12,22 @@ const Signup = () => {
     password: '',
   });
 
+  const [showAdmin, setShowAdmin] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const developerEmail = 'varun@example.com'; // ⬅️ Replace this with your email
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Check email match to show Admin option
+    if (name === 'email') {
+      const trimmedEmail = value.trim().toLowerCase();
+      setShowAdmin(trimmedEmail === developerEmail.toLowerCase());
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -28,7 +37,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const payload = { ...formData, role }; // include role
+      const payload = { ...formData, role };
 
       await API.post('/user/signup', payload);
 
@@ -54,7 +63,8 @@ const Signup = () => {
           style={styles.input}
         >
           <option value="user">User</option>
-          <option value="admin">Admin</option>
+         
+          {showAdmin && <option value="admin">Admin</option>}
         </select>
 
         <input
@@ -103,6 +113,7 @@ const Signup = () => {
   );
 };
 
+// styles same as your current code...
 const styles = {
   container: {
     maxWidth: '400px',
@@ -127,7 +138,7 @@ const styles = {
     padding: '0.8rem',
     marginBottom: '1rem',
     fontSize: '1rem',
-    color : 'blue',
+    color: 'blue',
     borderRadius: '5px',
     border: '1px solid #ccc',
   },
