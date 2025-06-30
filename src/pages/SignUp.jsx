@@ -35,10 +35,8 @@ const Signup = () => {
 
     // ✅ Save admin or user info and token in localStorage
     if (role === 'admin') {
-      localStorage.setItem("admin", JSON.stringify({
-        ...data.admin,
-        token: data.token, // make sure backend sends token in JSON
-      }));
+      localStorage.setItem("admin", JSON.stringify(data.admin));
+     
     } else {
       localStorage.setItem("user", JSON.stringify({
         ...data.user,
