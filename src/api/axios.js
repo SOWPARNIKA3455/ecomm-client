@@ -11,7 +11,7 @@ API.interceptors.request.use((config) => {
   const isAdminRoute = config.url?.includes('/admin');
 
   
-  if (user?.token && isAdminRoute) {
+  if (user?.token && !isAdminRoute) {
     config.headers.Authorization = `Bearer ${user.token}`;
   }
 
