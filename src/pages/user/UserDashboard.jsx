@@ -124,11 +124,12 @@ const UserDashboard = () => {
 const Card = ({ icon, label, onClick }) => (
   <button
     onClick={onClick}
-    className="flex flex-col items-center justify-center p-4 border rounded   transition"
+    className="flex flex-col items-center justify-center p-4 border rounded shadow-sm transition hover:bg-gray-100 dark:hover:bg-gray-700"
   >
     <div className="text-xl text-blue-600 mb-2">{icon}</div>
-    <span className="text-sm font-medium">{label}</span>
+    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{label}</span>
   </button>
 );
+
 
 export default UserDashboard;
