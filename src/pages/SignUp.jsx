@@ -56,20 +56,25 @@ const Signup = () => {
       <h2 style={styles.title}>Create Account</h2>
 
       <form onSubmit={handleSubmit} style={styles.form}>
+       
        <select
   name="role"
   value={role}
   onChange={(e) => setRole(e.target.value)}
-  disabled={!showAdmin} // Disable when admin role isn't available
+  disabled={!showAdmin}
   style={{
     ...styles.input,
-    backgroundColor: !showAdmin ? '#eee' : '#fff',
+    backgroundColor: !showAdmin ? '#f0f0f0' : '#fff',
+    color: '#333',
     cursor: !showAdmin ? 'not-allowed' : 'pointer',
   }}
 >
   <option value="user">User</option>
   {showAdmin && <option value="admin">Admin</option>}
 </select>
+
+
+
 
         <input
           type="text"
