@@ -30,7 +30,6 @@ const Navbar = () => {
     'Books',
   ];
 
-  // Detect current category from URL
   const categoryFromURL = location.pathname.startsWith('/products/category/')
     ? location.pathname.split('/products/category/')[1]
     : location.pathname === '/products'
@@ -63,6 +62,52 @@ const Navbar = () => {
 
   if (user?.role === 'admin' && location.pathname.startsWith('/admin')) return null;
 
+  const renderCategories = () => (
+    <ul className="flex items-center gap-4 md:gap-6 text-sm overflow-x-auto whitespace-nowrap px-4">
+      {categories.map((cat) => {
+        const catKey = cat.toLowerCase();
+        const isActive = categoryFromURL === catKey;
+        return (
+          <li
+            key={cat}
+            onClick={() =>
+              cat === 'All'
+                ? navigate('/products')
+                : navigate(`/products/category/${catKey}`)
+            }
+            className={`cursor-pointer transition hover:text-yellow-300 hover:underline ${
+              isActive ? 'text-yellow-300 font-semibold underline' : ''
+            }`}
+          >
+            {cat}
+          </li>
+        );
+      })}
+
+      {user?.role === 'user' && (
+        <li>
+          <button
+            onClick={() => navigate('/seller/register')}
+            className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition"
+          >
+            Become a Seller
+          </button>
+        </li>
+      )}
+
+      {user?.role === 'seller' && (
+        <li>
+          <button
+            onClick={() => navigate('/sellerdashboard')}
+            className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition"
+          >
+            Seller Dashboard
+          </button>
+        </li>
+      )}
+    </ul>
+  );
+
   return (
     <header className="shadow-md sticky top-0 z-50 bg-white dark:bg-gray-900">
       {/* Top bar */}
@@ -92,7 +137,7 @@ const Navbar = () => {
           </button>
         </form>
 
-        {/* Desktop right actions */}
+        {/* Desktop Right */}
         <div className="hidden md:flex items-center space-x-6 text-sm font-medium">
           <ThemeToggle />
           <div
@@ -149,13 +194,13 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Hamburger icon */}
+        {/* Hamburger */}
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-xl">
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
 
-      {/* Mobile dropdown menu */}
+      {/* Mobile Dropdown */}
       {isMenuOpen && (
         <div className="md:hidden px-4 py-3 bg-white dark:bg-gray-800 text-black dark:text-white space-y-4">
           {/* Mobile Search */}
@@ -177,25 +222,13 @@ const Navbar = () => {
 
           <ThemeToggle />
 
-          {/* User Actions */}
+          {/* User actions */}
           <div className="space-y-2">
             <div
               onClick={() => user ? navigate('/userdashboard') : navigate('/login')}
               className="cursor-pointer hover:text-yellow-400"
             >
               Account & Lists ({user?.name || 'Guest'})
-            </div>
-            <div
-              onClick={() => requireLogin('/user/wishlist')}
-              className="cursor-pointer hover:text-yellow-400"
-            >
-              Wishlist
-            </div>
-            <div
-              onClick={() => requireLogin('/cart')}
-              className="cursor-pointer hover:text-yellow-400"
-            >
-              Cart ({cartCount ?? 0})
             </div>
             {user?.role === 'admin' && (
               <div
@@ -224,51 +257,10 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Categories - always visible */}
-      <nav className="bg-yellow-800 dark:bg-blue-900 text-white px-4 py-2 overflow-x-auto whitespace-nowrap">
-        <ul className="flex items-center space-x-6 text-sm">
-          {categories.map((cat) => {
-            const catKey = cat.toLowerCase();
-            const isActive = categoryFromURL === catKey;
-            return (
-              <li
-                key={cat}
-                onClick={() =>
-                  cat === 'All'
-                    ? navigate('/products')
-                    : navigate(`/products/category/${catKey}`)
-                }
-                className={`cursor-pointer transition hover:text-yellow-300 hover:underline ${
-                  isActive ? 'text-yellow-300 font-semibold underline' : ''
-                }`}
-              >
-                {cat}
-              </li>
-            );
-          })}
-
-          {user?.role === 'user' && (
-            <li>
-              <button
-                onClick={() => navigate('/seller/register')}
-                className="ml-4 bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition"
-              >
-                Become a Seller
-              </button>
-            </li>
-          )}
-          {user?.role === 'seller' && (
-            <li>
-              <button
-                onClick={() => navigate('/sellerdashboard')}
-                className="ml-4 bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition"
-              >
-                Seller Dashboard
-              </button>
-            </li>
-          )}
-        </ul>
-      </nav>
+      {/* Always visible Categories (Mobile + Desktop) */}
+      <div className="bg-yellow-800 dark:bg-blue-900 text-white py-2">
+        {renderCategories()}
+      </div>
     </header>
   );
 };
