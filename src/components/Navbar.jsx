@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaSearch, FaShoppingCart, FaUser, FaHeart, FaBars, FaTimes } from 'react-icons/fa';
+import {
+  FaSearch,
+  FaShoppingCart,
+  FaUser,
+  FaHeart,
+  FaBars,
+  FaTimes,
+} from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import ThemeToggle from '../components/ThemeToggle';
 
@@ -37,16 +44,23 @@ const Navbar = () => {
   };
 
   const categories = [
-    'All', 'Men', 'Women', 'Kids',
-    'Electronics', 'Home & Kitchen', 'Accessories', 'Books'
+    'All',
+    'Men',
+    'Women',
+    'Kids',
+    'Electronics',
+    'Home & Kitchen',
+    'Accessories',
+    'Books',
   ];
 
-  if (user?.role === 'admin' && location.pathname.startsWith('/admin')) return null;
+  if (user?.role === 'admin' && location.pathname.startsWith('/admin'))
+    return null;
 
   return (
     <header className="shadow-md sticky top-0 z-50 bg-white dark:bg-gray-900">
-      {/* Top Navbar */}
-      <div className="flex items-center justify-between bg-gray-900 dark:bg-gray-800 text-white px-4 py-2">
+      {/* Top bar */}
+      <div className="flex justify-between items-center bg-gray-900 dark:bg-gray-800 text-white px-4 py-2">
         {/* Logo */}
         <div
           className="text-2xl font-bold cursor-pointer"
@@ -55,14 +69,7 @@ const Navbar = () => {
           Zenvue
         </div>
 
-        {/* Hamburger for Mobile */}
-        <div className="md:hidden">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
-          </button>
-        </div>
-
-        {/* Search Bar - Desktop */}
+        {/* Desktop search */}
         <form
           onSubmit={onSearch}
           className="hidden md:flex flex-1 mx-4 bg-white dark:bg-gray-700 rounded overflow-hidden"
@@ -79,10 +86,11 @@ const Navbar = () => {
           </button>
         </form>
 
-        {/* Right Actions - Desktop */}
+        {/* Desktop right side */}
         <div className="hidden md:flex items-center space-x-6 text-sm font-medium">
           <ThemeToggle />
 
+          {/* Account */}
           <div
             onClick={() => user ? navigate('/userdashboard') : navigate('/login')}
             className="cursor-pointer hover:text-yellow-400"
@@ -91,6 +99,7 @@ const Navbar = () => {
             <p className="font-semibold">Account & Lists</p>
           </div>
 
+          {/* Wishlist */}
           <div
             onClick={() => requireLogin('/user/wishlist')}
             className="relative flex items-center cursor-pointer hover:text-yellow-400"
@@ -99,6 +108,7 @@ const Navbar = () => {
             <FaHeart className="text-2xl text-red-500" />
           </div>
 
+          {/* Cart */}
           <div
             onClick={() => requireLogin('/cart')}
             className="relative flex items-center cursor-pointer hover:text-yellow-400"
@@ -110,6 +120,7 @@ const Navbar = () => {
             </span>
           </div>
 
+          {/* Admin shortcut */}
           {user?.role === 'admin' && (
             <p
               onClick={() => navigate('/admindashboard')}
@@ -119,6 +130,7 @@ const Navbar = () => {
             </p>
           )}
 
+          {/* Login/Logout */}
           {user ? (
             <p
               onClick={handleLogout}
@@ -136,71 +148,131 @@ const Navbar = () => {
             </div>
           )}
         </div>
+
+        {/* Hamburger */}
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-xl">
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </div>
 
-      {/* Search Bar - Mobile */}
+      {/* Mobile menu */}
       {isMenuOpen && (
-        <form
-          onSubmit={onSearch}
-          className="md:hidden flex mx-4 mt-2 bg-white dark:bg-gray-700 rounded overflow-hidden"
-        >
-          <input
-            type="text"
-            className="flex-1 px-4 text-black dark:text-white bg-white dark:bg-gray-700"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button type="submit" className="bg-yellow-400 px-4 hover:bg-yellow-500 transition">
-            <FaSearch className="text-black" />
-          </button>
-        </form>
-      )}
+        <div className="md:hidden px-4 py-3 bg-white dark:bg-gray-800 text-black dark:text-white space-y-4">
+          {/* Mobile Search */}
+          <form
+            onSubmit={onSearch}
+            className="flex bg-gray-200 dark:bg-gray-700 rounded overflow-hidden"
+          >
+            <input
+              type="text"
+              className="flex-1 px-3 bg-gray-200 dark:bg-gray-700 dark:text-white"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button type="submit" className="bg-yellow-400 px-4 hover:bg-yellow-500 transition">
+              <FaSearch className="text-black" />
+            </button>
+          </form>
 
-      {/* Mobile Menu Dropdown */}
-      {isMenuOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-3">
           <ThemeToggle />
 
-          <div
-            onClick={() => user ? navigate('/userdashboard') : navigate('/login')}
-            className="cursor-pointer hover:text-yellow-400"
-          >
-            <p className="text-xs">Hello, {user ? user.name : 'Guest'}</p>
-            <p className="font-semibold">Account & Lists</p>
+          {/* Account, Wishlist, Cart */}
+          <div className="space-y-2">
+            <div
+              onClick={() => user ? navigate('/userdashboard') : navigate('/login')}
+              className="cursor-pointer hover:text-yellow-400"
+            >
+              Account & Lists ({user?.name || 'Guest'})
+            </div>
+            <div
+              onClick={() => requireLogin('/user/wishlist')}
+              className="cursor-pointer hover:text-yellow-400"
+            >
+              Wishlist
+            </div>
+            <div
+              onClick={() => requireLogin('/cart')}
+              className="cursor-pointer hover:text-yellow-400"
+            >
+              Cart ({cartCount ?? 0})
+            </div>
+            {user?.role === 'admin' && (
+              <div
+                onClick={() => navigate('/admindashboard')}
+                className="text-red-400 cursor-pointer"
+              >
+                Admin Dashboard
+              </div>
+            )}
+            {user ? (
+              <div
+                onClick={handleLogout}
+                className="text-red-500 cursor-pointer"
+              >
+                Logout
+              </div>
+            ) : (
+              <div
+                onClick={() => navigate('/login')}
+                className="cursor-pointer hover:text-yellow-400"
+              >
+                Login
+              </div>
+            )}
           </div>
 
-          <div onClick={() => requireLogin('/user/wishlist')} className="flex items-center space-x-2">
-            <FaHeart className="text-red-500" />
-            <span>Wishlist</span>
+          {/* Mobile Categories */}
+          <div className="border-t pt-3">
+            <p className="font-semibold text-sm mb-2">Shop by Category</p>
+            <ul className="space-y-2 text-sm">
+              {categories.map((cat) => (
+                <li
+                  key={cat}
+                  onClick={() => {
+                    cat === 'All'
+                      ? navigate('/products')
+                      : navigate(`/products/category/${cat.toLowerCase()}`);
+                    setIsMenuOpen(false);
+                  }}
+                  className="cursor-pointer hover:underline hover:text-yellow-500"
+                >
+                  {cat}
+                </li>
+              ))}
+              {user?.role === 'user' && (
+                <li>
+                  <button
+                    onClick={() => {
+                      navigate('/seller/register');
+                      setIsMenuOpen(false);
+                    }}
+                    className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition"
+                  >
+                    Become a Seller
+                  </button>
+                </li>
+              )}
+              {user?.role === 'seller' && (
+                <li>
+                  <button
+                    onClick={() => {
+                      navigate('/sellerdashboard');
+                      setIsMenuOpen(false);
+                    }}
+                    className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition"
+                  >
+                    Seller Dashboard
+                  </button>
+                </li>
+              )}
+            </ul>
           </div>
-
-          <div onClick={() => requireLogin('/cart')} className="flex items-center space-x-2">
-            <FaShoppingCart />
-            <span>Cart ({cartCount ?? 0})</span>
-          </div>
-
-          {user?.role === 'admin' && (
-            <div onClick={() => navigate('/admindashboard')} className="text-red-400 underline">
-              Admin Dashboard
-            </div>
-          )}
-
-          {user ? (
-            <div onClick={handleLogout} className="text-red-400 hover:text-red-300 cursor-pointer">
-              Logout
-            </div>
-          ) : (
-            <div onClick={() => navigate('/login')} className="flex items-center space-x-2 cursor-pointer hover:text-yellow-400">
-              <FaUser />
-              <span>Login</span>
-            </div>
-          )}
         </div>
       )}
 
-      {/* Categories */}
-      <nav className="bg-yellow-800 dark:bg-blue-900 text-white px-4 py-2 overflow-x-auto whitespace-nowrap">
+      {/* Desktop Categories */}
+      <nav className="hidden md:flex bg-yellow-800 dark:bg-blue-900 text-white px-4 py-2 overflow-x-auto whitespace-nowrap">
         <ul className="flex items-center space-x-6 text-sm">
           {categories.map((cat) => (
             <li
@@ -215,7 +287,6 @@ const Navbar = () => {
               {cat}
             </li>
           ))}
-
           {user?.role === 'user' && (
             <li>
               <button
@@ -226,7 +297,6 @@ const Navbar = () => {
               </button>
             </li>
           )}
-
           {user?.role === 'seller' && (
             <li>
               <button
