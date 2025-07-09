@@ -120,22 +120,23 @@ const Navbar = () => {
           Zenvue
         </div>
 
-        {/* Mobile Search */}
-        <form
-          onSubmit={onSearch}
-          className=" flex-grow mx-2 bg-white dark:bg-gray-700 rounded overflow-hidden"
-        >
-          <input
-            type="text"
-            className="flex-1 px-3 text-black dark:text-white bg-white dark:bg-gray-700"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button type="submit" className="bg-yellow-400 px-3 hover:bg-yellow-500">
-            <FaSearch className="text-black" />
-          </button>
-        </form>
+       {/* Search Bar (Visible in all views) */}
+<form
+  onSubmit={onSearch}
+  className="flex flex-grow mx-2 bg-white dark:bg-gray-700 rounded overflow-hidden"
+>
+  <input
+    type="text"
+    className="flex-1 px-3 text-black dark:text-white bg-white dark:bg-gray-700"
+    placeholder="Search..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  <button type="submit" className="bg-yellow-400 px-3 hover:bg-yellow-500">
+    <FaSearch className="text-black" />
+  </button>
+</form>
+
 
         {/* Mobile Actions */}
         <div className="flex items-center gap-3 md:hidden">
