@@ -56,25 +56,17 @@ const Signup = () => {
       <h2 style={styles.title}>Create Account</h2>
 
       <form onSubmit={handleSubmit} style={styles.form}>
-       
-       <select
-  name="role"
-  value={role}
-  onChange={(e) => setRole(e.target.value)}
-  disabled={!showAdmin}
-  style={{
-    ...styles.input,
-    backgroundColor: !showAdmin ? '#f0f0f0' : '#fff',
-   
-    cursor: !showAdmin ? 'not-allowed' : 'pointer',
-  }}
->
-  <option value="user">User</option>
-  {showAdmin && <option value="admin">Admin</option>}
-</select>
-
-
-
+         {showAdmin && (
+    <select
+      name="role"
+      value={role}
+      onChange={(e) => setRole(e.target.value)}
+      style={styles.input}
+    >
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+  )}
 
         <input
           type="text"
