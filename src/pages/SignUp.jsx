@@ -65,7 +65,7 @@ const Signup = () => {
   style={{
     ...styles.input,
     backgroundColor: !showAdmin ? '#f0f0f0' : '#fff',
-    color: '#333',
+   
     cursor: !showAdmin ? 'not-allowed' : 'pointer',
   }}
 >
