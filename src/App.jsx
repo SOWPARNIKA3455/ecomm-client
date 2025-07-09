@@ -15,7 +15,7 @@ import PaymentSuccess from './pages/user/PaymentSuccess';
 import Checkout from './pages/user/CheckOut';
 import OrderHistory from './pages/user/OrderHistory';
 import Wishlist  from './pages/user/Wishlist';
-
+import PaymentCancelled from './pages/user/paymentCancelled';
 import UserDashboard from './pages/user/UserDashboard';
 
 import ProtectedRoutes from './layout/ProtectedRoutes';
@@ -46,7 +46,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/user/wishlist" element={<Wishlist />} />
-
+          <Route path="/payment-cancelled" element={<PaymentCancelled />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="userdashboard" element={<UserDashboard />} />
           <Route path="seller/register" element={<BecomeSeller />} />

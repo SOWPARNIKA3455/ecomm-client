@@ -189,6 +189,18 @@ const Checkout = () => {
         >
           {placing ? 'Placing Order…' : 'Place Order'}
         </button>
+
+        <button
+  onClick={() => {
+    if (confirm('Are you sure you want to cancel and return to cart?')) {
+      navigate('/cart');
+    }
+  }}
+  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded mt-2"
+>
+  Cancel and Return to Cart
+</button>
+
       </div>
     </div>
   );
