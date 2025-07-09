@@ -123,7 +123,7 @@ const Navbar = () => {
         {/* Mobile Search */}
         <form
           onSubmit={onSearch}
-          className="flex md:hidden flex-grow mx-2 bg-white dark:bg-gray-700 rounded overflow-hidden"
+          className=" flex-grow mx-2 bg-white dark:bg-gray-700 rounded overflow-hidden"
         >
           <input
             type="text"
