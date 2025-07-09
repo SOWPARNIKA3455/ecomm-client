@@ -190,16 +190,21 @@ const Checkout = () => {
           {placing ? 'Placing Order…' : 'Place Order'}
         </button>
 
-        <button
-  onClick={() => {
-    if (confirm('Are you sure you want to cancel and return to cart?')) {
-      navigate('/cart');
-    }
-  }}
-  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded mt-2"
->
-  Cancel and Return to Cart
-</button>
+{/* Cancel Payment Button */}
+{paymentMethod === 'Stripe' && (
+  <button
+    onClick={() => {
+      if (confirm('Are you sure you want to cancel payment and go back to cart?')) {
+        navigate('/cart');
+      }
+    }}
+    className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded mt-2"
+  >
+    Cancel Payment
+  </button>
+)}
+
+
 
       </div>
     </div>
