@@ -17,6 +17,7 @@ const Checkout = () => {
   const [cartItems, setCartItems] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [placing, setPlacing] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false); // new flag
   const [error, setError] = useState('');
 
   const [address, setAddress] = useState('');
@@ -25,7 +26,6 @@ const Checkout = () => {
 
   useEffect(() => {
     if (singleProduct) {
-      // If Buy Now
       setCartItems([{ product: singleProduct, quantity: 1 }]);
     } else {
       const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -79,6 +79,10 @@ const Checkout = () => {
         localStorage.setItem('orderInfo', JSON.stringify(payload));
         const res = await API.post('/payment/create-checkout-session', payload);
         const stripe = await stripePromise;
+
+        // ✅ Prevent further interaction
+        setIsRedirecting(true);
+
         await stripe.redirectToCheckout({ sessionId: res.data.id });
       } else {
         await API.post(
@@ -114,7 +118,7 @@ const Checkout = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 ">Checkout</h1>
+      <h1 className="text-2xl font-bold mb-6">Checkout</h1>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
@@ -184,28 +188,25 @@ const Checkout = () => {
 
         <button
           onClick={handlePlaceOrder}
-          disabled={placing}
+          disabled={placing || isRedirecting}
           className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded disabled:opacity-50"
         >
-          {placing ? 'Placing Order…' : 'Place Order'}
+          {placing || isRedirecting ? 'Processing…' : 'Place Order'}
         </button>
 
-{/* Cancel Payment Button */}
-{paymentMethod === 'Stripe' && (
-  <button
-    onClick={() => {
-      if (confirm('Are you sure you want to cancel payment and go back to cart?')) {
-        navigate('/cart');
-      }
-    }}
-    className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded mt-2"
-  >
-    Cancel Payment
-  </button>
-)}
-
-
-
+        {/* Cancel Payment Button */}
+        {paymentMethod === 'Stripe' && !isRedirecting && (
+          <button
+            onClick={() => {
+              if (confirm('Are you sure you want to cancel payment and go back to cart?')) {
+                navigate('/cart');
+              }
+            }}
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded mt-2"
+          >
+            Cancel Payment
+          </button>
+        )}
       </div>
     </div>
   );
