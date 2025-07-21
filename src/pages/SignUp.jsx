@@ -17,41 +17,44 @@ const Signup = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const developerEmail = 'sowparnika@example.com'; // ⬅️ Replace this with your email
+  const developerEmail = 'sowparnikasai@example.com'; // ⬅️ Your admin email
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Check email match to show Admin option
+    // Check email match to show Admin option and set role
     if (name === 'email') {
       const trimmedEmail = value.trim().toLowerCase();
       const isAdminEmail = trimmedEmail === developerEmail.toLowerCase();
       setShowAdmin(isAdminEmail);
-      if (!isAdminEmail) setRole('user'); // Reset to user if not admin email
+      setRole(isAdminEmail ? 'admin' : 'user'); // ✅ auto switch role
     }
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccessMsg('');
-    setLoading(true);
+  e.preventDefault();
+  setError('');
+  setSuccessMsg('');
+  setLoading(true);
 
-    try {
-      const payload = { ...formData, role };
+  try {
+    const payload = { ...formData, role };
 
-      await API.post('/user/signup', payload);
+    const endpoint = role === 'admin' ? '/admin/signup' : '/user/signup'; // 🔁 dynamically change URL
 
-      setSuccessMsg('Signup successful! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 1500);
-    } catch (err) {
-      const errorMsg = err.response?.data?.error || err.message || 'Signup failed';
-      setError(errorMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
+    await API.post(endpoint, payload);
+
+    setSuccessMsg('Signup successful! Redirecting to login...');
+    setTimeout(() => navigate('/login'), 1500);
+  } catch (err) {
+    const errorMsg = err.response?.data?.error || err.message || 'Signup failed';
+    setError(errorMsg);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div style={styles.container}>
