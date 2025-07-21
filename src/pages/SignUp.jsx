@@ -26,7 +26,9 @@ const Signup = () => {
     // Check email match to show Admin option
     if (name === 'email') {
       const trimmedEmail = value.trim().toLowerCase();
-      setShowAdmin(trimmedEmail === developerEmail.toLowerCase());
+      const isAdminEmail = trimmedEmail === developerEmail.toLowerCase();
+      setShowAdmin(isAdminEmail);
+      if (!isAdminEmail) setRole('user'); // Reset to user if not admin email
     }
   };
 
@@ -53,20 +55,22 @@ const Signup = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Create Account</h2>
+      <h2 style={styles.title}>
+        {role === 'admin' ? 'Admin Signup' : 'User Signup'}
+      </h2>
 
       <form onSubmit={handleSubmit} style={styles.form}>
-         {showAdmin && (
-    <select
-      name="role"
-      value={role}
-      onChange={(e) => setRole(e.target.value)}
-      style={styles.input}
-    >
-      <option value="user">User</option>
-      <option value="admin">Admin</option>
-    </select>
-  )}
+        {showAdmin && (
+          <select
+            name="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            style={styles.input}
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        )}
 
         <input
           type="text"
@@ -114,7 +118,7 @@ const Signup = () => {
   );
 };
 
-// styles same as your current code...
+// Styles
 const styles = {
   container: {
     maxWidth: '400px',
