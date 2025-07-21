@@ -17,7 +17,7 @@ const Signup = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const developerEmail = 'varun@example.com'; // ⬅️ Replace this with your email
+  const developerEmail = 'sowparnika@example.com'; // ⬅️ Replace this with your email
 
   const handleChange = (e) => {
     const { name, value } = e.target;
